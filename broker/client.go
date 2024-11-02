@@ -430,6 +430,9 @@ func (c *client) processClientPublish(packet *packets.PublishPacket) {
 		return
 	}
 
+	// lkz 输出消息内容
+	log.Info("Client published message", zap.String("ClientID", c.info.clientID), zap.String("Topic", topic), zap.String("Message", string(packet.Payload)))
+
 	//publish to bridge mq
 	cost := c.broker.Publish(&bridge.Elements{
 		ClientID:  c.info.clientID,
@@ -446,7 +449,7 @@ func (c *client) processClientPublish(packet *packets.PublishPacket) {
 
 	switch packet.Qos {
 	case QosAtMostOnce:
-		c.ProcessPublishMessage(packet)
+		c.ProcessPublishMessage(packet) //lkz: 发送的每个消息都会处理到这里
 	case QosAtLeastOnce:
 		puback := packets.NewControlPacket(packets.Puback).(*packets.PubackPacket)
 		puback.MessageID = packet.MessageID

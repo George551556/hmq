@@ -132,6 +132,7 @@ func NewBroker(config *Config) (*Broker, error) {
 }
 
 func (b *Broker) SubmitWork(clientId string, msg *Message) {
+	fmt.Println("awdfasegae-----------------------------------", msg.client.typ, clientId)
 	if b.wpool == nil {
 		b.wpool = pool.New(b.config.Worker)
 	}
@@ -400,6 +401,7 @@ func (b *Broker) handleConnection(typ int, conn net.Conn) error {
 	if !ok {
 		return errors.New("received msg that was not Connect")
 	}
+	fmt.Println("lkz:   ", msg)
 
 	log.Info("read connect from ", getAdditionalLogFields(msg.ClientIdentifier, conn)...)
 
